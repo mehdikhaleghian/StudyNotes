@@ -1,0 +1,134 @@
+Azure Storage:
+----------------NameSpace Model---------------
+<storage name>.core.windows.net
+<storage name>.blob.core.windows.net
+----------------Storage Account Types---------
+General purpose accounts:have performance type
+Blob Storage accounts:(specialized to be used for blobs) hot or cold tier
+hot for frequently accessed data
+cold for less used data
+----------------Storage Account replications------------------------------
+LRS
+ZRS
+GRS
+RA-GRS
+----------------Blobs-------------------------
+Blobs are in a container which is page or block
+Block Blobs
+
+Append Blobs:is comprised of blocks and is optimized for append operations, useful for logging for example
+
+Page Blobs:optimized for random read and write operations
+For infrasturcture the focus is on page blobs
+
+useful to store media, types of data, VHD files and virtual machines
+blobs are created inside a container
+----------------Tables------------------------
+have entities with field:value properties similar to NoSql with no fixed schema
+
+to store keys and their attributes, maybe a person and attributes about them.
+there is no set schema here and each entity can have its own structure
+a type of NoSql implementation
+a row and partition pair defines the primary key for each entity
+----------------Queues------------------------
+Reliable messaging for async communication
+maximum expiry date is 7 days
+----------------Files-------------------------
+via SMB Share
+useful for legacy applications that are designed to work with file system
+----------------Access and connectivity------------------------
+shared key(2 keys): there are two keys so while I am changing one, the other can be used
+
+shared access signature: gives more granularity, you can this part of storage account, you can perform these actions, gonna expire at a certain time
+This can be created at every level(storage account, blob container or even a particlular object)
+
+Anonymous access which is readonly
+
+when accessing from another azure service, the communication stays on the azure backbone
+when connecting to storage from outside of azure, it is done through internet but can be done using ExpressRoute
+----------------Azure Sql---------------------------
+Single Database
+Elastic Pool
+Up to 4 async replica
+DTU is a combination of cpu/memory and IO
+bacpac: data+schema
+dacpac:schema only
+---------------shared access signature----------
+Service SAS: Access to resources in one type of service, i.e. blob, queue or table
+Account SAS: includes service level operations
+
+An Ad hoc SAS enables the parameters to be set at creation time
+A SAS with stored access policy uses a policy defined on the resource container which manages constraints, which provides a means to revocate the SAS
+- changing the expiry time
+- Deleting the policy
+-------------CORS--------------------
+Set on a per service level
+add the domains that are allowed to pull content (can use *)
+-------------Store Encryption------------
+Different levels of encryption are available depending on the type of Azure Service utilized
+All encryption and decryption is automatically performed using AES-256
+------------Azure tables-----------------
+There are two classes: tableEntity and DynamicTableEntity
+We can create custom entity classes inheriting from TableEntity class
+TableOperation for insert, replace etc
+TableBatchOperation for batch processing (all the entities inside the batch should have the same partitionKey and is limited to 100 entities in the batch and is limited to 4 MB)
+for querying:
+TableOperation.Retrieve<T>() or
+table.CreateQuery<T>().Where
+
+selecting entities with other properties is not optimal
+------------Azure Blobs-------------------------
+Block Blobs: 
+max blob size:4.75TB
+max block size:100MB
+
+Page Blobs:
+Max blob size:8TB
+Page size:512 byte
+Optimized for random read and write operations
+
+Append Blob:
+max blob size:195GB
+max block size:4MB
+
+we can set the contenttype of the block blob to image/pjpeg so that it can be read from rest get
+Behind the scenes azure media services uses blob to store the files
+SetMetaData and FetchAttributes to set and get meta data of a blob
+
+blobClient.DefaultRequestOptions.SingleBlobUploadThresholdInBytes the max size of a blob that can be uploaded in one call. if it exceeds this number automatically it turns to sequential mode
+blockBlob.StreamWriteSizeInBytes controls the size of each individual block that we are uploading
+blobClient.DefaultRequestOptions.ParallelOperationThreadCount to set number of paralle http requests
+----------------SAS-------------------------
+Signatures can be created for containers,blobs, queues and tables
+----------------Http Status codes and fault handling---------------
+1xx: informational
+2xx: Success
+3xx: redirection
+4xx: Client Error
+5xx: Server Error
+Transient faults:
+Protocol specific
+503: Service Unavailable
+504: Gateway Timeout
+Application specific:
+409 Conflict (we may want to consider this transient even though storage client library does not consider them transient) 
+(not transient if protocol specific)
+401 Unauthorized (we may want to consider this transient even though storage client library does not consider them transient) (not transient if protocol specific)
+
+*we have options to customize the way that transient faults are determined
+
+Retry Policies: (we need to think about idempotency)
+Fixed
+Incremental
+Exponential
+
+CloudTableClient.DefaultRequestOptions.RetryPolicy
+StorageException.RequestInformation
+The default retry policy is exponential with retries around 3, 7 and 15 seconds(3 retries)
+--------------Transient Fault Handling Application Block (topaz)----------------
+gives the ability to retry a block of code and not only a single call to azure
+Supports Azure Services
+*sql azure
+*service bus
+*azure storage
+*azure caching service
