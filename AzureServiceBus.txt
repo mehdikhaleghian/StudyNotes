@@ -1,0 +1,113 @@
+Azure Service Bus is a PaaS Cloud Computing Service
+
+Azure service bus currently expose these technologies:
+*Relay Service
+*Brokered Messaging (Queues and Topics)
+*Service Bus Event Hubs (Telemetry services on a massive scale-used for IOT)
+*Service Bus Notification Hubs(allows messages to be broadcast to a number of devices)
+---------Capabilities of a messaging system--------------
+*Communication
+*Load Levelling(can act as a buffer between the sender and the receiver)
+*Load Balancing(when the generated load is higher than what the receiver can process within a period of time): having multiple receivers
+*High Availability (when there is load balancing)
+*Temporal Decoupling: message will be processed at another time other than the time they have been sent (it can be cost effective to do processing only one hour a day)
+---------Messaging Entities----------------
+Service Bus Namespace: acts as a contaner for service bus artifacts
+Queues - Point 2 Point messaging
+Topics - Publish Subscribe model
+Subscriptions inside topics
+Filters can determine message subscriptions
+-----------Capabilities----------
+Communication: applications in different environments communicate effectively and reliably
+Security: confidentiality and integrity of the messages
+Reliable Delivery: don't want to lose any data
+low-latency: transmission and processing time of messages be kept as low as possible
+availability: high level of uptime for messaging infrustructure
+Scalability
+-----------Service bus features-----------
+publish-subscribe messaging
+dead-lettering
+message sessions to have related messages that need to be processed together
+request-response correlation: async two way communication
+Message deferral: messages preserved and processed later
+Scheduled Enque time
+Duplicate detection
+message expirtation
+-----------Protocols for exchanging messages with messaging entities-------------
+AMQP(Advanced Message Queue Protocol):Open Messaging Protocol. Default used by Service Bus SDK
+HTTP:can pass firewalls/cross platform compatibility
+-----------Commonly used classes-----------------
+NamespaceManager: allows to manage service entities
+MessagingFactory: used as a factory class to create clients for messaging entities for a specified service bus namespace
+QueueClient
+TopicClient:for sender
+SubscriptionClient: for receiver
+--------------Sending Properties-----------------
+RequiresDuplicateDetection and DuplicateDetectionHistoryTimeWindow:
+uses messageId to detect duplicate messages
+--------------Receiving properties--------------
+MaxDeliveryCount: the number of times a message can be received before being dead-lettered
+---------------Managing Service bus artifacts----------------
+User NamespaceManager and
+QueueDescription
+TopicDescription
+SubscriptionDescription
+--------------Brokered Message------------
+Header{
+	CorrelationId: used for routing using filters
+	MessageId:used for duplicate detection
+	SessionId: used for correlation//need to enable session for queue or topic
+	//and when the session is enabled, topicClient or queueClient should call AcceptSession first 
+	Label
+	Properties name object dictionary
+	-ContentType
+}
+Body
+
+messages can be sent once, in order to resend a message you can use clone method
+the same as above, received messages cannot be resend
+----------Receiving messages--------------
+*Receive and delete mode (when creating queueClient ReceiveMode)
+message received and deleted in one operation
+no option to abandon, defer, or dead lettering
+at most once, no duplicate processing, possible message loss
+
+Receive=>{complete,abandon,defer,deadletter}
+
+*peak lock mode (when creating queueClient ReceiveMode)
+possible to abandon, defer, or dead lettering
+receiver is responsible for message completion
+at least once delivery
+
+*onMessage
+multithreaded message pump with constrained concurrency
+often the preferred way to receive and process
+----------------Publish and subscribe--------------
+why: when an application needs to send messages to multiple receivers, there is a growing responsibilty for the sender to manage more queues and sending messages to the right queue
+
+with publish-subscribe, the responsibilty is placed on the messaging system itself
+we don't need to modify the sending application because another receiver is required
+
+we can also apply filters to subscriptions
+as a result our messaging applications are more managable and maintainable
+
+*filters
+SQL filters
+-TSQL like expression
+-values used in filters should be available in message header properties collection
+-message body data cannot be used for filtering the messages
+
+CorrelationFilter
+-Only supports equal operation
+-Improved performance for filtering
+-can be applied to message properties collection as well as other values in message header
+----------------Implementing Wire Tap----------------
+to inspect messages that are travelling in the channel
+With topics it is only an additional description
+-----------------Exception Handling--------------
+exception class is MessagingException
+*IsTransient
+*Data
+*Detail
+----------------Questions----------
+what is partitioned queues and topics?

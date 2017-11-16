@@ -1,0 +1,31 @@
+You can talk about architecture and why it is important to be selected in the beginning
+you can talk about serverless and who are the players
+Demo on the portal
+Demo in the code
+serverless architectures in azure
+Hosting plan:dynamic and app service plan
+--------------------
+learn more about azure function security???
+
+
+which senarios are good fit for azure functions?
+Why should I use azure functions?
+it seems that azure functions bring the topic of serverless code
+------------------------------------------
+Azure Functions = Events + Code
+------------------------------------------
+type of events{
+	time-based,// this is like background processes, the question is how long it can run for?
+	//are they good for generating reports?
+	new data become available",//a new item in the queue or a new file in azure blob storage
+	webHooks,// you can write your own webHooks
+	
+}
+
+//cost is based on how long your function runs and what the memory usage of the function is
+//azure functions are totally appropriate when you run your job less often
+//why you have to pay the cost of an app service plan when you can go cheaper
+//the question is are they really good for long running background process?
+//the threshold of a running function is 5 minutes
+//we can group related azure functions into a function app
+//interesting slack requires a webhook to call when for example deployment is done so it can call a funcion which responds to web hooks

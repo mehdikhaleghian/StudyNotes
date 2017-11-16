@@ -1,0 +1,29 @@
+Azure Functions 2
+-------------------------------
+Serverless
+*Azure functions (serverless compute)
+is an evolution of azure webjobs sdk
+event + code
+*Logic Apps (serverless workflows)
+this helps you to chain different functions together
+*Event Grid (serverless event routing)
+when an event happens you need to route that event to all the pieces that execute
+
+What make up a serverless technology:
+Helps you develop and deply applications faster because you are not worried about managing servers
+*Reduced devops
+*Reduced time to market
+because you are just worried about the core logic of your application
+*Per action billing
+if nothing is ever running you are not paying anything
+
+------------
+some new bindings available on azure functions 2.0
+azure functions can integrate with cosmosdb, meaning that changes to data in cosmosdb can trigger an azure function
+
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-microsoft-graph
+
+appinsights now gather information of azure functions
+https://docs.microsoft.com/en-us/azure/azure-functions/durable-functions-overview
+
+
