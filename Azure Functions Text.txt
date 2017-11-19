@@ -1,0 +1,15 @@
+----------------------------------------------
+Serverless hosting providers:
+----------------------------------------------
+New players are entering this space rapidly, but as you’d expect, the largest cloud providers have the most extensive set of geographical locations and supporting resources for hosting serverless applications.
+
+So who are the players in this space, and what development technologies do they currently support? How much would it cost to build and run your application on these services?
+
+Amazon Web Services (AWS) is usually the first name that comes to mind when you think of cloud computing for good reason — they are by the far the largest provider in this space and are host to a much broader set of supporting tools and resources than any of their competitors.
+
+Microsoft’s Azure platform has been rapidly expanding it’s features (and it’s customer base) in recent years, as it’s been aggressively competing with AWS for a share of this market. The list of supported resources largely parallels what AWS is offering, but Azure also provides quite a few additional features specific to the .NET and Typescript audiences, as you’d expect.
+
+It won’t surprise anyone to know that all of the “Big Three” of cloud computing each have their own offerings in this space, although Google’s functions-as-a-service product does seem to have received less attention than Microsoft and Amazon’s offerings. I’m a little surprised by this, as when you look under the covers at what Google is providing here its really every bit as compelling as it’s peers 
+
+Currently Google Cloud Functions only supports Javascript
+It’s also worth noting (and this is true of other providers too) that other languages which can be compiled to Javascript (e.g. Typescript, Coffeescript) are also perfectly valid candidates when developing software for these services.
