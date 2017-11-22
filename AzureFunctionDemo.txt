@@ -1,0 +1,81 @@
+---------------------Demo1----------------
+OnPaymentReceived
+------------------------------------------
+log.Info("Order Received");
+var order = await req.Content.ReadAsAsync<Order>();
+log.Info($"Order {order.OrderId} received from {order.Email} for product {order.ProductId}");
+return req.CreateResponse(HttpStatusCode.OK,
+new
+{
+    message = "thank you for your order"
+});
+--------------------------------------------
+ public class Order
+    {
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public string OrderId { get; set; }
+        public string ProductId { get; set; }
+        public string Email { get; set; }
+        public decimal Price { get; set; }
+
+    }
+------------------------------------------
+{
+    "orderId": "11",
+    "productId":"2",
+    "email": "mehdi.khaleghian@hotmail.com",
+    "price":100
+}
+
+------------Demo2------------------------
+[Queue("order")] IAsyncCollector<Order> orderQueue
+-----------------------------------------
+await orderQueue.AddAsync(order);
+
+
+------------Demo3--------------------------
+[Table("Order")] IAsyncCollector<Order> orderTable
+----------------------------------------------
+order.PartitionKey = "Orders";
+order.RowKey = order.OrderId;
+await orderTable.AddAsync(order);
+
+
+
+---------------Demo4-----------------------
+GenerateLicenceFile
+------------------------------------------
+Order
+------------------------------------------
+public class Order
+    {
+        public string PartitionKey { get; set; }
+        public string RowKey { get; set; }
+        public string OrderId { get; set; }
+        public string ProductId { get; set; }
+        public string Email { get; set; }
+        public decimal Price { get; set; }
+
+    }
+------------------------------------------
+licences/{rand-guid}.lic
+-------------------------------------------
+[Blob("licences/{rand-guid}.lic")] TextWriter outputBlob
+-----------------------------------------------
+outputBlob.WriteLine($"OrderId: {order.OrderId}");
+outputBlob.WriteLine($"Email: {order.Email}");
+outputBlob.WriteLine($"ProductId: {order.ProductId}");
+outputBlob.WriteLine($"Purchase Date: {DateTime.UtcNow}");
+var hash = MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(order.Email + "secret"));
+outputBlob.WriteLine($"SecretCode: {BitConverter.ToString(hash).Replace("-", "")}");
+----------------------------------------------
+using System.Security.Cryptography;
+using System.Text;
+
+
+------------------Demo In code-------------
+AzureWebJobsSendGridApiKey
+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
+AzureWebJobsFromEmailAddress
+mehdi.khaleghian@readify.net
